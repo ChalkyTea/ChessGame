@@ -73,11 +73,16 @@ class ChessView(context: Context?, attrs: AttributeSet?) : View(context, attrs) 
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun drawChessboard(canvas:Canvas?){
-        for (i in 0..7){
-            for (j in 0..7){
-                paint.color = if((i+j)%2 ==1) darkColor else lightColor
-                canvas?.drawRect(originX + i * cellSide, originY + j * cellSide, originX + (i+1) * cellSide,originY+(j+1)*cellSide, paint)
+        for (row in 0..7){
+            for (col in 0..7){
+                drawSquareAt(canvas,row,col,(row+col)%2 ==1)
             }
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun drawSquareAt(canvas: Canvas?, col:Int, row: Int, isDark:Boolean){
+        paint.color = if(isDark) darkColor else lightColor
+        canvas?.drawRect(originX + col * cellSide, originY + row * cellSide, originX + (col+1) * cellSide,originY+(row+1)*cellSide, paint)
     }
 }
