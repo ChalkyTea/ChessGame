@@ -11,6 +11,7 @@ import android.graphics.RectF
 import android.os.Build
 import android.util.AttributeSet
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.RequiresApi
 import java.lang.Integer.min
@@ -58,6 +59,20 @@ class ChessView(context: Context?, attrs: AttributeSet?) : View(context, attrs) 
         drawChessboard(canvas)
         drawPieces(canvas)
     }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        event ?: return false
+        when (event.action){
+            MotionEvent.ACTION_DOWN -> {
+                Log.d(TAG, "down")
+            }
+            MotionEvent.ACTION_UP-> {
+                Log.d(TAG, "up")
+            }
+        }
+        return true
+    }
+
     private fun drawPieces(canvas:Canvas){
         for(row in 0..7){
             for (col in 0..7){
