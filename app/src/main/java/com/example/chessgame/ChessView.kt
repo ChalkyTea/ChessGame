@@ -17,15 +17,13 @@ import androidx.annotation.RequiresApi
 import java.lang.Integer.min
 
 class ChessView(context: Context?, attrs: AttributeSet?) : View(context, attrs) {
-    private final val scaleFactor = .9f
-    private final var originX = 20f
-    private final var originY = 200f
-    private final var cellSide: Float = 130f
-    @RequiresApi(Build.VERSION_CODES.O)
-    private final val lightColor = Color.argb(1f,.9f,.9f, .9f)
-    @RequiresApi(Build.VERSION_CODES.O)
-    private final val darkColor = Color.argb(1f,.7f,.7f, .7f)
-    private final val imgResIDs = setOf(
+    private val scaleFactor = .9f
+    private var originX = 20f
+    private var originY = 200f
+    private var cellSide: Float = 130f
+    private val lightColor = Color.parseColor("#EEEEEE")
+    private val darkColor = Color.parseColor("#444444")
+    private val imgResIDs = setOf(
         R.drawable.bishop_black,
         R.drawable.bishop_white,
         R.drawable.king_black,
@@ -39,8 +37,10 @@ class ChessView(context: Context?, attrs: AttributeSet?) : View(context, attrs) 
         R.drawable.pawn_black,
         R.drawable.pawn_white,
         )
-    private final val bitmaps = mutableMapOf<Int, Bitmap>()
-    private final val paint = Paint()
+    private val bitmaps = mutableMapOf<Int, Bitmap>()
+    private val paint = Paint()
+    private var fromCol: Int  = -1
+    private var fromRow: Int  = -1
 
     var chessDelegate: ChessDelegate? = null
 
@@ -51,10 +51,10 @@ class ChessView(context: Context?, attrs: AttributeSet?) : View(context, attrs) 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onDraw(canvas: Canvas) {
         canvas ?: return
-        val chessBoardSide = min(canvas.width, canvas.height) * scaleFactor
+        val chessBoardSide = min(width, height) * scaleFactor
         cellSide = chessBoardSide / 8f
-        originX = (canvas.width - chessBoardSide)/2f
-        originY = (canvas.height - chessBoardSide)/2f
+        originX = (width - chessBoardSide)/2f
+        originY = (height - chessBoardSide)/2f
 
         drawChessboard(canvas)
         drawPieces(canvas)
@@ -64,11 +64,20 @@ class ChessView(context: Context?, attrs: AttributeSet?) : View(context, attrs) 
         event ?: return false
         when (event.action){
             MotionEvent.ACTION_DOWN -> {
-                Log.d(TAG, "down")
+                fromCol = ((event.x - originX)/ cellSide).toInt()
+                fromRow = 7 - ((event.y - originY)/ cellSide).toInt()
             }
+            MotionEvent.ACTION_MOVE -> {
+
+            }
+
             MotionEvent.ACTION_UP-> {
-                Log.d(TAG, "up")
+                val col = ((event.x - originX)/ cellSide).toInt()
+                val row = 7 - ((event.y - originY)/ cellSide).toInt()
+                Log.d(TAG, "From ($fromCol, $fromRow) to ($col, $row)")
+                chessDelegate?.movePiece(fromCol, fromRow, col, row)
             }
+
         }
         return true
     }
