@@ -10,13 +10,16 @@ import android.graphics.Rect
 import android.graphics.RectF
 import android.os.Build
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
+import java.lang.Integer.min
 
 class ChessView(context: Context?, attrs: AttributeSet?) : View(context, attrs) {
-    private final val originX = 20f
-    private final val originY = 200f
-    private final val cellSide: Float = 130f
+    private final val scaleFactor = .9f
+    private final var originX = 20f
+    private final var originY = 200f
+    private final var cellSide: Float = 130f
     @RequiresApi(Build.VERSION_CODES.O)
     private final val lightColor = Color.argb(1f,.9f,.9f, .9f)
     @RequiresApi(Build.VERSION_CODES.O)
@@ -46,9 +49,15 @@ class ChessView(context: Context?, attrs: AttributeSet?) : View(context, attrs) 
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onDraw(canvas: Canvas) {
+        Log.d(TAG, "${canvas?.width},${canvas?.height}")
+        canvas?.let{
+            val chessBoardSide = min(it.width, it.height) * scaleFactor
+            cellSide = chessBoardSide / 8f
+            originX = (it.width - chessBoardSide)/2f
+            originY = (it.height - chessBoardSide)/2f
+        }
         drawChessboard(canvas)
         drawPieces(canvas)
-
     }
     private fun drawPieces(canvas:Canvas?){
         for(row in 0..7){
