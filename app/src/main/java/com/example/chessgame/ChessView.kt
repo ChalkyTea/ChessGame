@@ -41,6 +41,8 @@ class ChessView(context: Context?, attrs: AttributeSet?) : View(context, attrs) 
     private val paint = Paint()
     private var fromCol: Int  = -1
     private var fromRow: Int  = -1
+    private var movingPieceX = -1f
+    private var movingPieceY = -1f
 
     var chessDelegate: ChessDelegate? = null
 
@@ -68,7 +70,9 @@ class ChessView(context: Context?, attrs: AttributeSet?) : View(context, attrs) 
                 fromRow = 7 - ((event.y - originY)/ cellSide).toInt()
             }
             MotionEvent.ACTION_MOVE -> {
-
+                movingPieceX = event.x
+                movingPieceY = event.y
+                invalidate()
             }
 
             MotionEvent.ACTION_UP-> {
@@ -85,8 +89,15 @@ class ChessView(context: Context?, attrs: AttributeSet?) : View(context, attrs) 
     private fun drawPieces(canvas:Canvas){
         for(row in 0..7){
             for (col in 0..7){
-                chessDelegate?.pieceAt(col,row)?.let{drawPiecesAt(canvas, col,row,it.resID)}
+                if (row != fromRow || col!= fromCol){
+                    chessDelegate?.pieceAt(col,row)?.let{drawPiecesAt(canvas, col,row,it.resID)}
+                }
             }
+        }
+
+        chessDelegate?.pieceAt(fromCol, fromRow)?.let{
+            val bitmap = bitmaps[it.resID]!!
+            canvas.drawBitmap(bitmap, null, RectF(movingPieceX - cellSide/2 ,movingPieceY- cellSide/2,movingPieceX + cellSide/2,movingPieceY + cellSide/2), paint)
         }
     }
 
