@@ -2,13 +2,12 @@ package com.example.chessgame
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 
 const val TAG =  "MainActivity"
 class MainActivity : AppCompatActivity(), ChessDelegate {
 
-    var chessModel = ChessModel()
+    var chessModel = ChessGame
     private lateinit var chessView: ChessView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

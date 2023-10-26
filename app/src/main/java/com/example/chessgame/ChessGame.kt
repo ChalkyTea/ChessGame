@@ -1,6 +1,6 @@
 package com.example.chessgame
 
-class ChessModel {
+object ChessGame {
     var piecesBox = mutableSetOf<ChessPiece>()
 
     init{
