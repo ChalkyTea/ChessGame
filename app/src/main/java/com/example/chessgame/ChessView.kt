@@ -53,6 +53,13 @@ class ChessView(context: Context?, attrs: AttributeSet?) : View(context, attrs) 
         loadBitmaps()
     }
 
+    //This override fun seem to cause the board to got off-center. Removing it will displace the reset offscreen
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int){
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        val smaller = min(widthMeasureSpec, heightMeasureSpec)
+        setMeasuredDimension(smaller,smaller)
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onDraw(canvas: Canvas) {
         canvas ?: return
