@@ -15,10 +15,11 @@ object ChessGame {
             if(it.player == movingPiece.player){
                 return
             }
-            piecesBox.remove(it)}
+            piecesBox.remove(it)
+        }
 
         piecesBox.remove(movingPiece)
-        piecesBox.add(ChessPiece(toCol,toRow, movingPiece.player, movingPiece.rank, movingPiece.resID))
+        piecesBox.add(movingPiece.copy(col=toCol, row = toRow))
     }
 
     fun reset(){
