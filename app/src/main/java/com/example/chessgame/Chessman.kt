@@ -1,6 +1,6 @@
 package com.example.chessgame
 
-enum class ChessRank {
+enum class Chessman {
     KING,
     QUEEN,
     BISHOP,

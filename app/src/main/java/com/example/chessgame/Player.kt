@@ -1,6 +1,6 @@
 package com.example.chessgame
 
-enum class ChessPlayer {
+enum class Player {
     WHITE,
     BLACK
 }
