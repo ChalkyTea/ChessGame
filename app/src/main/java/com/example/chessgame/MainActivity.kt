@@ -1,5 +1,6 @@
 package com.example.chessgame
 
+import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -16,7 +17,7 @@ import java.util.concurrent.Executors
 
 const val TAG = "MainActivity"
 
-class MainActivity : AppCompatActivity(), ChessDelegate {
+class MainActivity : AppCompatActivity(), ChessDelegate, OnPieceCapturedListener {
 
     private lateinit var chessView: ChessView
     private lateinit var resetButton: Button
@@ -33,7 +34,22 @@ class MainActivity : AppCompatActivity(), ChessDelegate {
             ChessGame.reset()
             chessView.invalidate()
         }
+
+        ChessGame.addOnPieceCapturedListener(this)
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        ChessGame.removeOnPieceCapturedListener(this)
+    }
+
+    override fun onPieceCaptured(capturedPiece: ChessPiece) {
+        val intent = Intent(this, CaptureActivity::class.java)  // Note the .java
+        startActivity(intent)
+        Log.d(TAG, "Attempting to capture piece")
+
+    }
+
 
 
     override fun pieceAt(square: Square): ChessPiece? = ChessGame.pieceAt(square)

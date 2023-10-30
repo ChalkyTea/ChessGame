@@ -1,9 +1,19 @@
 package com.example.chessgame
 
+import android.util.Log
 import kotlin.math.abs
 
 object ChessGame {
     private var piecesBox = mutableSetOf<ChessPiece>()
+    private val onPieceCapturedListeners = mutableListOf<OnPieceCapturedListener>()
+
+    fun addOnPieceCapturedListener(listener: OnPieceCapturedListener) {
+        onPieceCapturedListeners.add(listener)
+    }
+
+    fun removeOnPieceCapturedListener(listener: OnPieceCapturedListener) {
+        onPieceCapturedListeners.remove(listener)
+    }
 
     init {
         reset()
@@ -15,6 +25,25 @@ object ChessGame {
 
     fun addPiece(piece: ChessPiece) {
         piecesBox.add(piece)
+    }
+
+    private fun privateMovePiece(fromCol: Int, fromRow: Int, toCol: Int, toRow: Int) {
+        if (fromCol == toCol && fromRow == toRow) return
+        val movingPiece = pieceAt(fromCol, fromRow) ?: return
+
+        pieceAt(toCol, toRow)?.let {
+            if (it.player == movingPiece.player) {
+                return
+            }
+            piecesBox.remove(it)
+            onPieceCapturedListeners.forEach { listener ->
+                Log.d("ChessGame", "Notifying listener about captured piece") // <-- Add this log
+                listener.onPieceCaptured(it)
+            }
+        }
+
+        piecesBox.remove(movingPiece)
+        addPiece(movingPiece.copy(col = toCol, row = toRow))
     }
 
     private fun canKnightMove(from: Square, to: Square): Boolean {
@@ -136,25 +165,24 @@ object ChessGame {
     }
 
     fun movePiece(from: Square, to: Square) {
-        if (canMove(from, to)) {
-            movePiece(from.col, from.row, to.col, to.row)
-        }
+    if (canMove(from, to)) {
+        privateMovePiece(from.col, from.row, to.col, to.row)
     }
-
-    private fun movePiece(fromCol: Int, fromRow: Int, toCol: Int, toRow: Int) {
-        if (fromCol == toCol && fromRow == toRow) return
-        val movingPiece = pieceAt(fromCol, fromRow) ?: return
-
-        pieceAt(toCol, toRow)?.let {
-            if (it.player == movingPiece.player) {
-                return
-            }
-            piecesBox.remove(it)
-        }
-
-        piecesBox.remove(movingPiece)
-        addPiece(movingPiece.copy(col = toCol, row = toRow))
-    }
+}
+//    private fun movePiece(fromCol: Int, fromRow: Int, toCol: Int, toRow: Int) {
+//        if (fromCol == toCol && fromRow == toRow) return
+//        val movingPiece = pieceAt(fromCol, fromRow) ?: return
+//
+//        pieceAt(toCol, toRow)?.let {
+//            if (it.player == movingPiece.player) {
+//                return
+//            }
+//            piecesBox.remove(it)
+//        }
+//
+//        piecesBox.remove(movingPiece)
+//        addPiece(movingPiece.copy(col = toCol, row = toRow))
+//    }
 
     fun reset() {
         clear()
