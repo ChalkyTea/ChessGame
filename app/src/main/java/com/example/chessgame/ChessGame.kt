@@ -1,6 +1,8 @@
 package com.example.chessgame
 
+import android.content.Intent
 import android.util.Log
+import androidx.core.app.ActivityCompat.startActivityForResult
 import kotlin.math.abs
 
 object ChessGame {
@@ -26,6 +28,32 @@ object ChessGame {
     fun addPiece(piece: ChessPiece) {
         piecesBox.add(piece)
     }
+
+    fun tryCapture(attacker: ChessPiece, defender: ChessPiece): Boolean {
+        var gamesToPlay = defender.lives
+
+        while (gamesToPlay > 0) {
+            val gameResult = playMiniGame() // This function will handle the minigame logic
+            if (gameResult) {
+                gamesToPlay--
+            } else {
+                attacker.lives--
+                if (attacker.lives == 0) {
+                    // The attacking piece has been destroyed
+                    return false
+                }
+            }
+        }
+        // The defending piece has been captured
+        return true
+    }
+
+    fun playMiniGame(): Boolean {
+        // Placeholder for minigame logic
+        // Return true if the minigame is won, false otherwise
+        return Math.random() > 0.5 // 50% chance to win for now
+    }
+
 
     private fun privateMovePiece(fromCol: Int, fromRow: Int, toCol: Int, toRow: Int) {
         if (fromCol == toCol && fromRow == toRow) return
@@ -124,27 +152,29 @@ object ChessGame {
 
         val movingPiece = pieceAt(from) ?: return false
         val player = movingPiece.player
+        val direction = if (player == Player.WHITE) 1 else -1
 
+        // Moving forward
         if (deltaCol == 0) {
-            // Moving forward
-            val direction = if (player == Player.WHITE) 1 else -1
-            if ((deltaRow == 1 && to.row - from.row == direction) ||
-                (deltaRow == 2 && from.row == 1 && to.row - from.row == direction * 2) ||
-                (deltaRow == 2 && from.row == 6 && to.row - from.row == direction * 2)
-            ) {
-                if (pieceAt(to) == null) {
-                    return true
-                }
+            // Single step forward
+            if (deltaRow == 1 && to.row - from.row == direction && pieceAt(to) == null) {
+                return true
             }
-        } else if (deltaCol == 1 && deltaRow == 1) {
-            // Diagonal attack
+            // Double step forward from starting position
+            if ((from.row == 1 || from.row == 6) && deltaRow == 2 && to.row - from.row == direction * 2 && pieceAt(to) == null) {
+                return true
+            }
+        }
+        // Diagonal attack
+        else if (deltaCol == 1 && deltaRow == 1) {
             val targetPiece = pieceAt(to)
-            if (targetPiece != null && targetPiece.player != player) {
+            if (targetPiece != null && targetPiece.player != player && to.row - from.row == direction) {
                 return true
             }
         }
         return false
     }
+
 
 
     fun canMove(from: Square, to: Square): Boolean {
@@ -164,25 +194,95 @@ object ChessGame {
 
     }
 
-    fun movePiece(from: Square, to: Square) {
-    if (canMove(from, to)) {
-        privateMovePiece(from.col, from.row, to.col, to.row)
-    }
-}
-//    private fun movePiece(fromCol: Int, fromRow: Int, toCol: Int, toRow: Int) {
-//        if (fromCol == toCol && fromRow == toRow) return
-//        val movingPiece = pieceAt(fromCol, fromRow) ?: return
-//
-//        pieceAt(toCol, toRow)?.let {
-//            if (it.player == movingPiece.player) {
-//                return
-//            }
-//            piecesBox.remove(it)
+//    fun movePiece(from: Square, to: Square) {
+//        if (canMove(from, to)) {
+//            privateMovePiece(from.col, from.row, to.col, to.row)
+//        }
+//    }
+
+//    fun movePiece(from: Square, to: Square, resultOfCaptureGame: Boolean? = null): Boolean {
+//        if (!canMove(from, to)) {
+//            return false
 //        }
 //
-//        piecesBox.remove(movingPiece)
-//        addPiece(movingPiece.copy(col = toCol, row = toRow))
+//        val attacker = pieceAt(from)
+//        val defender = pieceAt(to)
+//
+//        if (defender != null && attacker?.player != defender.player && shouldTryCapture(attacker!!, defender)) {
+//            Log.d("ChessGame", "Needs mini-game")
+//            return true
+//        }
+//
+//        if (defender != null && attacker?.player != defender.player) {
+//            if (resultOfCaptureGame == null && shouldTryCapture(attacker!!, defender)) {
+//                // Notify the UI layer to start the mini-game.
+//                return true
+//            } else if (resultOfCaptureGame != null) {
+//                if (resultOfCaptureGame) {
+//                    piecesBox.remove(defender)
+//                    privateMovePiece(from.col, from.row, to.col, to.row)
+//                } else {
+//                    piecesBox.remove(attacker)
+//                }
+//            }
+//        } else {
+//            privateMovePiece(from.col, from.row, to.col, to.row)
+//        }
+//        return false
 //    }
+
+    // Remove or modify the movePiece function
+//    fun movePiece(from: Square, to: Square): Boolean {
+//        if (canMove(from, to)) {
+//            privateMovePiece(from.col, from.row, to.col, to.row)
+//            val defender = pieceAt(to)
+//            val attacker = pieceAt(from)
+//            if (defender != null && attacker?.player != defender.player) {
+//                return true // indicating that a mini-game is required
+//            }
+//        }
+//        return false
+//    }
+
+
+    fun movePiece(from: Square, to: Square, resultOfCaptureGame: Boolean? = null): Boolean {
+        if (!canMove(from, to)) {
+            return false
+        }
+
+        val attacker = pieceAt(from)
+        val defender = pieceAt(to)
+
+        if (defender != null && attacker?.player != defender.player) {
+            if (resultOfCaptureGame == null && shouldTryCapture(attacker!!, defender)) {
+                // Notify the UI layer to start the mini-game.
+                return true
+            } else if (resultOfCaptureGame != null) {
+                if (resultOfCaptureGame) {
+                    piecesBox.remove(defender)
+                    privateMovePiece(from.col, from.row, to.col, to.row)
+                } else {
+                    piecesBox.remove(attacker)
+                }
+            }
+        } else {
+            privateMovePiece(from.col, from.row, to.col, to.row)
+        }
+        return false
+    }
+
+
+
+
+
+
+
+
+    fun shouldTryCapture(attacker: ChessPiece, defender: ChessPiece): Boolean {
+        return attacker.lives >= 1 || defender.lives >= 1
+    }
+
+
 
     fun reset() {
         clear()
