@@ -12,7 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ChessGame"
         tools:targetApi="31">
-        <activity android:name=".CaptureActivity"></activity>
+        <activity
+            android:name=".Minigame2Activity"
+            android:exported="false" />
+        <activity
+            android:name=".Minigame1Activity"
+            android:exported="false" />
+        <activity android:name=".CaptureActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

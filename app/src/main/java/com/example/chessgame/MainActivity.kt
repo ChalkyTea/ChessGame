@@ -15,6 +15,7 @@ import java.net.Socket
 import java.net.SocketException
 import java.util.Scanner
 import java.util.concurrent.Executors
+import kotlin.random.Random
 
 const val TAG = "MainActivity"
 
@@ -31,6 +32,10 @@ class MainActivity : AppCompatActivity(), ChessDelegate, OnPieceCapturedListener
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        repeat(20) {
+            Log.d(TAG, "Test random number: ${Random.nextInt(1, 3)}")
+        }
 
         chessView = findViewById<ChessView>(R.id.chess_view)
         resetButton = findViewById<Button>(R.id.reset_button)
@@ -78,14 +83,30 @@ class MainActivity : AppCompatActivity(), ChessDelegate, OnPieceCapturedListener
     override fun movePiece(from: Square, to: Square) {
         this.from = from
         this.to = to
+//        val needsMiniGame = ChessGame.movePiece(from, to)
+//        if (needsMiniGame) {
+//            Log.d(TAG, "Starting CaptureActivity due to move")
+//            val intent = Intent(this, CaptureActivity::class.java)
+//
+//            startActivityForResult(intent, CAPTURE_REQUEST_CODE)
+//        } else {
+//            chessView.invalidate()
+//        }
         val needsMiniGame = ChessGame.movePiece(from, to)
         if (needsMiniGame) {
-            Log.d(TAG, "Starting CaptureActivity due to move")
-            val intent = Intent(this, CaptureActivity::class.java)
+//            val randomMiniGame = (1..2).random() // Assuming 2 mini-games
+            val randomMiniGame = Random.nextInt(1, 3)
+            Log.d(TAG, "Selected mini-game: $randomMiniGame")
+            val intent = when (randomMiniGame) {
+                1 -> Intent(this, Minigame1Activity::class.java)
+                2 -> Intent(this, Minigame2Activity::class.java)
+                else -> throw IllegalArgumentException("Invalid mini-game number")
+            }
             startActivityForResult(intent, CAPTURE_REQUEST_CODE)
         } else {
             chessView.invalidate()
         }
+
     }
 
 
