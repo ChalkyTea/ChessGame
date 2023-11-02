@@ -73,12 +73,17 @@ class MainActivity : AppCompatActivity(), ChessDelegate, OnPieceCapturedListener
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         Log.d(TAG, "onActivityResult called with requestCode: $requestCode, resultCode: $resultCode")
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == CAPTURE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            val miniGameResult = data?.getBooleanExtra("RESULT", false) ?: false
-            ChessGame.movePiece(from, to, miniGameResult)  // <-- IMPORTANT: finalize the move with the result
+        if (requestCode == CAPTURE_REQUEST_CODE) {
+            val miniGameResult = when (resultCode) {
+                Activity.RESULT_OK -> data?.getBooleanExtra("RESULT", false) ?: false
+                Activity.RESULT_CANCELED -> false
+                else -> false
+            }
+            ChessGame.movePiece(from, to, miniGameResult) // Finalize the move with the result
             chessView.invalidate()
         }
     }
+
 
     override fun movePiece(from: Square, to: Square) {
         this.from = from
@@ -97,7 +102,8 @@ class MainActivity : AppCompatActivity(), ChessDelegate, OnPieceCapturedListener
 //            val randomMiniGame = (1..2).random() // Assuming 2 mini-games
             val randomMiniGame = Random.nextInt(1, 3)
             Log.d(TAG, "Selected mini-game: $randomMiniGame")
-            val intent = when (randomMiniGame) {
+            val MiniGame = 1
+            val intent = when (MiniGame) {
                 1 -> Intent(this, Minigame1Activity::class.java)
                 2 -> Intent(this, Minigame2Activity::class.java)
                 else -> throw IllegalArgumentException("Invalid mini-game number")
