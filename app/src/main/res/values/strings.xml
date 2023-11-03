@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">ChessGame</string>
     <string name="reset_button">Reset</string>
+    <string name="minigame2Rule">Flip your phone downwards and wait for the right amount of time to capture the piece</string>
 </resources>
