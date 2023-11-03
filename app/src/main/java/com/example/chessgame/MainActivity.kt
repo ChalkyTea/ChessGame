@@ -83,14 +83,38 @@ class MainActivity : AppCompatActivity(), ChessDelegate, OnPieceCapturedListener
 //            chessView.invalidate()
 //        }
 //    }
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        if (requestCode == CAPTURE_REQUEST_CODE) { // Use the CAPTURE_REQUEST_CODE for the minigame
+//            val miniGameResult = resultCode == Activity.RESULT_OK
+//            ChessGame.movePiece(from, to, miniGameResult) // Finalize the move with the result
+//            chessView.invalidate() // Redraw the chessboard to reflect the updated state
+//        }
+//    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == CAPTURE_REQUEST_CODE) { // Use the CAPTURE_REQUEST_CODE for the minigame
+        if (requestCode == CAPTURE_REQUEST_CODE) {
             val miniGameResult = resultCode == Activity.RESULT_OK
+            val capturedPiece = ChessGame.pieceAt(to) // Get the piece at the 'to' position
+
+            // Create a message based on the result of the minigame and the player of the captured piece
+            val message = if (miniGameResult) {
+                val piecePlayer = if (capturedPiece?.player == Player.WHITE) "White" else "Black"
+                "$piecePlayer piece has been captured!"
+            } else {
+                val piecePlayer = if (capturedPiece?.player != Player.WHITE) "White" else "Black"
+                "$piecePlayer piece has been destroyed!"
+            }
+
+            // Show the toast message
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+
             ChessGame.movePiece(from, to, miniGameResult) // Finalize the move with the result
             chessView.invalidate() // Redraw the chessboard to reflect the updated state
         }
     }
+
 
 
     override fun movePiece(from: Square, to: Square) {
@@ -110,7 +134,7 @@ class MainActivity : AppCompatActivity(), ChessDelegate, OnPieceCapturedListener
 //            val randomMiniGame = (1..2).random() // Assuming 2 mini-games
             val randomMiniGame = Random.nextInt(1, 4)
             Log.d(TAG, "Selected mini-game: $randomMiniGame")
-//            val MiniGame = 3
+//            val MiniGame = 1
             val intent = when (randomMiniGame) {
                 1 -> Intent(this, Minigame1Activity::class.java)
                 2 -> Intent(this, Minigame2Activity::class.java)

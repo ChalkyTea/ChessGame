@@ -1,5 +1,6 @@
 package com.example.chessgame
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
@@ -113,6 +114,59 @@ class Minigame1Activity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+//        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+//
+//        val display = windowManager.defaultDisplay
+//        val size = Point()
+//        display.getSize(size)
+//        xMax = size.x.toFloat()
+//        yMax = size.y.toFloat()
+//
+//        // Get the status bar and action bar height
+//        val tv = TypedValue()
+//        if (theme.resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+//            yMax -= TypedValue.complexToDimensionPixelSize(tv.data, resources.displayMetrics)
+//        }
+//        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+//        if (resourceId > 0) {
+//            yMax -= resources.getDimensionPixelSize(resourceId)
+//        }
+//
+//        ballView = CustomBallView(this)
+//        setContentView(ballView)
+//
+//        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+//        accelerometerSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+//        sensorManager?.registerListener(sensorEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_GAME)
+//
+//        // Set up the handler to end the game after 5 seconds if the ball hasn't touched the circle
+//        failCaptureHandler = Handler()
+//        failCaptureHandler.postDelayed({
+//            if (!gameEnded) {
+//                gameEnded = true
+//                setResult(RESULT_CANCELED) // Player fails to touch the circle within time, loses their piece
+//                finish()
+//            }
+//        }, 5000) // Corrected the time to 5 seconds
+
+        showGameRulesPopup()
+    }
+
+
+    private fun showGameRulesPopup() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Game Rules")
+        builder.setMessage("Move the ball to the center to to win within 10 seconds. If you cannot, you lose!")
+
+        builder.setPositiveButton("OK") { dialog, which ->
+            startGame()
+        }
+
+        builder.setCancelable(false) // Prevent the dialog from being canceled on back press
+        builder.show()
+    }
+
+    private fun startGame() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         val display = windowManager.defaultDisplay
@@ -121,7 +175,7 @@ class Minigame1Activity : AppCompatActivity() {
         xMax = size.x.toFloat()
         yMax = size.y.toFloat()
 
-        // Get the status bar and action bar height
+        // Subtract the status bar and action bar height
         val tv = TypedValue()
         if (theme.resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
             yMax -= TypedValue.complexToDimensionPixelSize(tv.data, resources.displayMetrics)
@@ -138,7 +192,6 @@ class Minigame1Activity : AppCompatActivity() {
         accelerometerSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         sensorManager?.registerListener(sensorEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_GAME)
 
-        // Set up the handler to end the game after 5 seconds if the ball hasn't touched the circle
         failCaptureHandler = Handler()
         failCaptureHandler.postDelayed({
             if (!gameEnded) {
@@ -146,9 +199,8 @@ class Minigame1Activity : AppCompatActivity() {
                 setResult(RESULT_CANCELED) // Player fails to touch the circle within time, loses their piece
                 finish()
             }
-        }, 5000) // Corrected the time to 5 seconds
+        }, 10000) // Ensure this is the correct time you want for the delay
     }
-
 
     override fun onDestroy() {
         super.onDestroy()
