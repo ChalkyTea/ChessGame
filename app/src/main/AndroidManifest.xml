@@ -13,6 +13,9 @@
         android:theme="@style/Theme.ChessGame"
         tools:targetApi="31">
         <activity
+            android:name=".Minigame3Activity"
+            android:exported="false" />
+        <activity
             android:name=".Minigame2Activity"
             android:exported="false" />
         <activity

@@ -93,8 +93,6 @@ class MainActivity : AppCompatActivity(), ChessDelegate, OnPieceCapturedListener
     }
 
 
-
-
     override fun movePiece(from: Square, to: Square) {
         this.from = from
         this.to = to
@@ -112,10 +110,11 @@ class MainActivity : AppCompatActivity(), ChessDelegate, OnPieceCapturedListener
 //            val randomMiniGame = (1..2).random() // Assuming 2 mini-games
             val randomMiniGame = Random.nextInt(1, 3)
             Log.d(TAG, "Selected mini-game: $randomMiniGame")
-//            val MiniGame = 1
-            val intent = when (randomMiniGame) {
+            val MiniGame = 3
+            val intent = when (MiniGame) {
                 1 -> Intent(this, Minigame1Activity::class.java)
                 2 -> Intent(this, Minigame2Activity::class.java)
+                3 -> Intent(this, Minigame3Activity::class.java)
                 else -> throw IllegalArgumentException("Invalid mini-game number")
             }
             startActivityForResult(intent, CAPTURE_REQUEST_CODE)
