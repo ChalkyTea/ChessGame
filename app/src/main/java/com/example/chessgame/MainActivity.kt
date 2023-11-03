@@ -108,10 +108,10 @@ class MainActivity : AppCompatActivity(), ChessDelegate, OnPieceCapturedListener
         val needsMiniGame = ChessGame.movePiece(from, to)
         if (needsMiniGame) {
 //            val randomMiniGame = (1..2).random() // Assuming 2 mini-games
-            val randomMiniGame = Random.nextInt(1, 3)
+            val randomMiniGame = Random.nextInt(1, 4)
             Log.d(TAG, "Selected mini-game: $randomMiniGame")
-            val MiniGame = 3
-            val intent = when (MiniGame) {
+//            val MiniGame = 3
+            val intent = when (randomMiniGame) {
                 1 -> Intent(this, Minigame1Activity::class.java)
                 2 -> Intent(this, Minigame2Activity::class.java)
                 3 -> Intent(this, Minigame3Activity::class.java)
