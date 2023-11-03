@@ -70,19 +70,29 @@ class MainActivity : AppCompatActivity(), ChessDelegate, OnPieceCapturedListener
         Log.d(TAG, "Starting CaptureActivity for piece capture")
     }
 
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        Log.d(TAG, "onActivityResult called with requestCode: $requestCode, resultCode: $resultCode")
+//        super.onActivityResult(requestCode, resultCode, data)
+//        if (requestCode == CAPTURE_REQUEST_CODE) {
+//            val miniGameResult = when (resultCode) {
+//                Activity.RESULT_OK -> data?.getBooleanExtra("RESULT", false) ?: false
+//                Activity.RESULT_CANCELED -> false
+//                else -> false
+//            }
+//            ChessGame.movePiece(from, to, miniGameResult) // Finalize the move with the result
+//            chessView.invalidate()
+//        }
+//    }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        Log.d(TAG, "onActivityResult called with requestCode: $requestCode, resultCode: $resultCode")
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == CAPTURE_REQUEST_CODE) {
-            val miniGameResult = when (resultCode) {
-                Activity.RESULT_OK -> data?.getBooleanExtra("RESULT", false) ?: false
-                Activity.RESULT_CANCELED -> false
-                else -> false
-            }
+        if (requestCode == CAPTURE_REQUEST_CODE) { // Use the CAPTURE_REQUEST_CODE for the minigame
+            val miniGameResult = resultCode == Activity.RESULT_OK
             ChessGame.movePiece(from, to, miniGameResult) // Finalize the move with the result
-            chessView.invalidate()
+            chessView.invalidate() // Redraw the chessboard to reflect the updated state
         }
     }
+
+
 
 
     override fun movePiece(from: Square, to: Square) {
@@ -102,8 +112,8 @@ class MainActivity : AppCompatActivity(), ChessDelegate, OnPieceCapturedListener
 //            val randomMiniGame = (1..2).random() // Assuming 2 mini-games
             val randomMiniGame = Random.nextInt(1, 3)
             Log.d(TAG, "Selected mini-game: $randomMiniGame")
-            val MiniGame = 1
-            val intent = when (MiniGame) {
+//            val MiniGame = 1
+            val intent = when (randomMiniGame) {
                 1 -> Intent(this, Minigame1Activity::class.java)
                 2 -> Intent(this, Minigame2Activity::class.java)
                 else -> throw IllegalArgumentException("Invalid mini-game number")
