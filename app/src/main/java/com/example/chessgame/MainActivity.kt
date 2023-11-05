@@ -54,13 +54,6 @@ class MainActivity : AppCompatActivity(), ChessDelegate, OnPieceCapturedListener
         ChessGame.removeOnPieceCapturedListener(this)
     }
 
-//    override fun onPieceCaptured(capturedPiece: ChessPiece) {
-//        val intent = Intent(this, CaptureActivity::class.java)  // Note the .java
-//        startActivity(intent)
-//        Log.d(TAG, "Attempting to capture piece")
-//
-//    }
-
     override fun pieceAt(square: Square): ChessPiece? = ChessGame.pieceAt(square)
 
 
@@ -69,28 +62,6 @@ class MainActivity : AppCompatActivity(), ChessDelegate, OnPieceCapturedListener
         startActivityForResult(intent, CAPTURE_REQUEST_CODE)
         Log.d(TAG, "Starting CaptureActivity for piece capture")
     }
-
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        Log.d(TAG, "onActivityResult called with requestCode: $requestCode, resultCode: $resultCode")
-//        super.onActivityResult(requestCode, resultCode, data)
-//        if (requestCode == CAPTURE_REQUEST_CODE) {
-//            val miniGameResult = when (resultCode) {
-//                Activity.RESULT_OK -> data?.getBooleanExtra("RESULT", false) ?: false
-//                Activity.RESULT_CANCELED -> false
-//                else -> false
-//            }
-//            ChessGame.movePiece(from, to, miniGameResult) // Finalize the move with the result
-//            chessView.invalidate()
-//        }
-//    }
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        if (requestCode == CAPTURE_REQUEST_CODE) { // Use the CAPTURE_REQUEST_CODE for the minigame
-//            val miniGameResult = resultCode == Activity.RESULT_OK
-//            ChessGame.movePiece(from, to, miniGameResult) // Finalize the move with the result
-//            chessView.invalidate() // Redraw the chessboard to reflect the updated state
-//        }
-//    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -120,21 +91,10 @@ class MainActivity : AppCompatActivity(), ChessDelegate, OnPieceCapturedListener
     override fun movePiece(from: Square, to: Square) {
         this.from = from
         this.to = to
-//        val needsMiniGame = ChessGame.movePiece(from, to)
-//        if (needsMiniGame) {
-//            Log.d(TAG, "Starting CaptureActivity due to move")
-//            val intent = Intent(this, CaptureActivity::class.java)
-//
-//            startActivityForResult(intent, CAPTURE_REQUEST_CODE)
-//        } else {
-//            chessView.invalidate()
-//        }
+
         val needsMiniGame = ChessGame.movePiece(from, to)
         if (needsMiniGame) {
-//            val randomMiniGame = (1..2).random() // Assuming 2 mini-games
             val randomMiniGame = Random.nextInt(1, 4)
-            Log.d(TAG, "Selected mini-game: $randomMiniGame")
-//            val MiniGame = 1
             val intent = when (randomMiniGame) {
                 1 -> Intent(this, Minigame1Activity::class.java)
                 2 -> Intent(this, Minigame2Activity::class.java)
@@ -145,20 +105,5 @@ class MainActivity : AppCompatActivity(), ChessDelegate, OnPieceCapturedListener
         } else {
             chessView.invalidate()
         }
-
     }
-
-
-
-//    fun movePiece(from: Square, to: Square, miniGameResult: Boolean) {
-//        // Handle the mini-game result here. For example:
-//        if (miniGameResult) {
-//            // Do something when mini-game is won
-//        } else {
-//            // Do something when mini-game is lost
-//        }
-//        movePiece(from, to) // This will call the above method
-//    }
-
-
 }

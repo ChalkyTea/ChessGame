@@ -114,41 +114,6 @@ class Minigame1Activity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-//
-//        val display = windowManager.defaultDisplay
-//        val size = Point()
-//        display.getSize(size)
-//        xMax = size.x.toFloat()
-//        yMax = size.y.toFloat()
-//
-//        // Get the status bar and action bar height
-//        val tv = TypedValue()
-//        if (theme.resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
-//            yMax -= TypedValue.complexToDimensionPixelSize(tv.data, resources.displayMetrics)
-//        }
-//        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
-//        if (resourceId > 0) {
-//            yMax -= resources.getDimensionPixelSize(resourceId)
-//        }
-//
-//        ballView = CustomBallView(this)
-//        setContentView(ballView)
-//
-//        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-//        accelerometerSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-//        sensorManager?.registerListener(sensorEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_GAME)
-//
-//        // Set up the handler to end the game after 5 seconds if the ball hasn't touched the circle
-//        failCaptureHandler = Handler()
-//        failCaptureHandler.postDelayed({
-//            if (!gameEnded) {
-//                gameEnded = true
-//                setResult(RESULT_CANCELED) // Player fails to touch the circle within time, loses their piece
-//                finish()
-//            }
-//        }, 5000) // Corrected the time to 5 seconds
-
         showGameRulesPopup()
     }
 

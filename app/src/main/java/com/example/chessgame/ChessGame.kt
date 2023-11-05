@@ -194,57 +194,6 @@ object ChessGame {
 
     }
 
-//    fun movePiece(from: Square, to: Square) {
-//        if (canMove(from, to)) {
-//            privateMovePiece(from.col, from.row, to.col, to.row)
-//        }
-//    }
-
-//    fun movePiece(from: Square, to: Square, resultOfCaptureGame: Boolean? = null): Boolean {
-//        if (!canMove(from, to)) {
-//            return false
-//        }
-//
-//        val attacker = pieceAt(from)
-//        val defender = pieceAt(to)
-//
-//        if (defender != null && attacker?.player != defender.player && shouldTryCapture(attacker!!, defender)) {
-//            Log.d("ChessGame", "Needs mini-game")
-//            return true
-//        }
-//
-//        if (defender != null && attacker?.player != defender.player) {
-//            if (resultOfCaptureGame == null && shouldTryCapture(attacker!!, defender)) {
-//                // Notify the UI layer to start the mini-game.
-//                return true
-//            } else if (resultOfCaptureGame != null) {
-//                if (resultOfCaptureGame) {
-//                    piecesBox.remove(defender)
-//                    privateMovePiece(from.col, from.row, to.col, to.row)
-//                } else {
-//                    piecesBox.remove(attacker)
-//                }
-//            }
-//        } else {
-//            privateMovePiece(from.col, from.row, to.col, to.row)
-//        }
-//        return false
-//    }
-
-    // Remove or modify the movePiece function
-//    fun movePiece(from: Square, to: Square): Boolean {
-//        if (canMove(from, to)) {
-//            privateMovePiece(from.col, from.row, to.col, to.row)
-//            val defender = pieceAt(to)
-//            val attacker = pieceAt(from)
-//            if (defender != null && attacker?.player != defender.player) {
-//                return true // indicating that a mini-game is required
-//            }
-//        }
-//        return false
-//    }
-
-
     fun movePiece(from: Square, to: Square, resultOfCaptureGame: Boolean? = null): Boolean {
         if (!canMove(from, to)) {
             return false
@@ -270,13 +219,6 @@ object ChessGame {
         }
         return false
     }
-
-
-
-
-
-
-
 
     fun shouldTryCapture(attacker: ChessPiece, defender: ChessPiece): Boolean {
         return attacker.lives >= 1 || defender.lives >= 1
