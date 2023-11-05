@@ -29,32 +29,6 @@ object ChessGame {
         piecesBox.add(piece)
     }
 
-    fun tryCapture(attacker: ChessPiece, defender: ChessPiece): Boolean {
-        var gamesToPlay = defender.lives
-
-        while (gamesToPlay > 0) {
-            val gameResult = playMiniGame() // This function will handle the minigame logic
-            if (gameResult) {
-                gamesToPlay--
-            } else {
-                attacker.lives--
-                if (attacker.lives == 0) {
-                    // The attacking piece has been destroyed
-                    return false
-                }
-            }
-        }
-        // The defending piece has been captured
-        return true
-    }
-
-    fun playMiniGame(): Boolean {
-        // Placeholder for minigame logic
-        // Return true if the minigame is won, false otherwise
-        return Math.random() > 0.5 // 50% chance to win for now
-    }
-
-
     private fun privateMovePiece(fromCol: Int, fromRow: Int, toCol: Int, toRow: Int) {
         if (fromCol == toCol && fromRow == toRow) return
         val movingPiece = pieceAt(fromCol, fromRow) ?: return

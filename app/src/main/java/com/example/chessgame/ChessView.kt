@@ -115,12 +115,14 @@ class ChessView(context: Context?, attrs: AttributeSet?) : View(context, attrs) 
                 }
 
         movingPieceBitmap?.let {
-            canvas.drawBitmap(it, null, RectF(movingPieceX - cellSide/2, movingPieceY - cellSide/2,movingPieceX + cellSide/2,movingPieceY + cellSide/2), paint)
+            canvas.drawBitmap(it, null, RectF(movingPieceX - cellSide/2, movingPieceY - cellSide/2,
+                movingPieceX + cellSide/2,movingPieceY + cellSide/2), paint)
         }
     }
 
     private fun drawPieceAt(canvas: Canvas, col: Int, row: Int, resID: Int) =
-        canvas.drawBitmap(bitmaps[resID]!!, null, RectF(originX + col * cellSide,originY + (7 - row) * cellSide,originX + (col + 1) * cellSide,originY + ((7 - row) + 1) * cellSide), paint)
+        canvas.drawBitmap(bitmaps[resID]!!, null, RectF(originX + col * cellSide,originY + (7 - row) * cellSide,
+            originX + (col + 1) * cellSide,originY + ((7 - row) + 1) * cellSide), paint)
 
     private fun loadBitmaps() =
         imgResIDs.forEach { imgResID ->

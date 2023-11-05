@@ -86,7 +86,6 @@ class Minigame3Activity : AppCompatActivity(), SensorEventListener {
     }
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
-        // Not used in this context
     }
 
     companion object {
